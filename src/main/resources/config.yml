@@ -1,0 +1,16 @@
+mariadb:
+  host: "localhost"
+  port: 3306
+  username: "user"
+  password: "password"
+  database: "schest"
+h2:
+  file: "syncchest"
+  username: "user"
+  password: "password"
+mongodb:
+  uri: "mongodb://localhost:27017/db"
+  database: "schest"
+  collection: "sc_"
+type: h2
+prefix: "&8[&a&lNexus&f&lBan&8]"

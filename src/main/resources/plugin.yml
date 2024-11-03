@@ -1,0 +1,10 @@
+name: NexusBan
+version: '1.0-SNAPSHOT'
+main: cloud.nextflow.nexusban.NexusBan
+api-version: '1.21'
+authors: [ Queryzi ]
+description: A plugin that can moderate your server!
+website: www.nextflow.cloud
+commands:
+  ban:
+    description: 'Ban someone'
