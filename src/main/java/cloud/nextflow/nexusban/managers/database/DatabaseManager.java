@@ -65,6 +65,7 @@ public class DatabaseManager extends NexusManager {
                     } catch (DatabaseException exception) {
                         throw new ManagerException("Error while initializing MariaDB", exception);
                     }
+                    dbUtils = new DBUtils(sqlConnector);
                 }
                 case MONGODB -> {
                     connectorType = ConnectorType.MONGO;
