@@ -2,6 +2,7 @@ package cloud.nextflow.nexusban;
 
 import cloud.nextflow.nexusban.exceptions.ManagerException;
 import cloud.nextflow.nexusban.managers.commands.CommandManager;
+import cloud.nextflow.nexusban.managers.database.DatabaseManager;
 import cloud.nextflow.nexusban.managers.listeners.ListenerManager;
 import cloud.nextflow.nexusban.managers.messages.MessageManager;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
@@ -10,9 +11,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Level;
 
 public final class NexusBan extends JavaPlugin {
-    ListenerManager listenerManager;
-    MessageManager messageManager;
-    CommandManager commandManager;
+    private ListenerManager listenerManager;
+    private MessageManager messageManager;
+    private CommandManager commandManager;
+    private DatabaseManager databaseManager;
 
     @Override
     public void onEnable() {
@@ -21,8 +23,9 @@ public final class NexusBan extends JavaPlugin {
         listenerManager = new ListenerManager(this);
         messageManager = new MessageManager(this);
         commandManager = new CommandManager(this);
+        databaseManager = new DatabaseManager(this);
 
-        nexusManagers = new NexusManager[]{ listenerManager, messageManager, commandManager };
+        nexusManagers = new NexusManager[]{ listenerManager, messageManager, commandManager, databaseManager };
         // Plugin startup logic
         saveDefaultConfig();
         loadManagers(nexusManagers);
