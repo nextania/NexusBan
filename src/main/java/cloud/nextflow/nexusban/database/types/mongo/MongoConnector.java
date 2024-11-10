@@ -14,8 +14,8 @@ import org.bson.Document;
 import java.util.logging.Logger;
 
 public class MongoConnector extends DBConnector {
-    private MongoClient mongoClient;
-    private MongoDatabase database;
+    private final MongoClient mongoClient;
+    private final MongoDatabase database;
     private MongoCollection<Document> collection;
 
     public MongoConnector(MongoDB type, Logger logger) throws DatabaseException {

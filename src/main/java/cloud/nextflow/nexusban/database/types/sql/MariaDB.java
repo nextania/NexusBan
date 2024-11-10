@@ -1,5 +1,7 @@
 package cloud.nextflow.nexusban.database.types.sql;
 
+import cloud.nextflow.nexusban.exceptions.DatabaseConfigException;
+
 public class MariaDB implements SQLType {
     public String host;
     public int port;
@@ -7,7 +9,13 @@ public class MariaDB implements SQLType {
     public String user = "";
     public String password = "";
 
-    public MariaDB(String host, int port, String database, String user, String password) {
+    public MariaDB(String host, int port, String database, String user, String password) throws DatabaseConfigException {
+        if (host == null) throw new DatabaseConfigException("The host for MariaDB isn't defined in the config");
+        if (port == 0) throw new DatabaseConfigException("The port for MariaDB isn't defined in the config");
+        if (database == null) throw new DatabaseConfigException("The database for MariaDB isn't defined in the config");
+        if (user == null) throw new DatabaseConfigException("The username for MariaDB isn't defined in the config");
+        if (password == null) throw new DatabaseConfigException("The password for MariaDB isn't defined in the config");
+
         this.host = host;
         this.port = port;
         this.database = database;

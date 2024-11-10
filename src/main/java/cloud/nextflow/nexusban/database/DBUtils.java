@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class DBUtils {
     private MongoConnector mongoConnector;
     private SQLConnector sqlConnector;
-    private ConnectorType type;
+    private final ConnectorType type;
 
     public DBUtils(SQLConnector connector) {
         this.sqlConnector = connector;
