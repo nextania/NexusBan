@@ -1,9 +1,10 @@
 package cloud.nextflow.nexusban.database;
 
-import cloud.nextflow.nexusban.database.types.ConnectorType;
+import cloud.nextflow.nexusban.database.types.general.ConnectorType;
 import cloud.nextflow.nexusban.database.types.mongo.MongoConnector;
 import cloud.nextflow.nexusban.database.types.sql.SQLConnector;
 
+import cloud.nextflow.nexusban.exceptions.DatabaseException;
 import org.bson.Document;
 
 import java.sql.Connection;
@@ -30,7 +31,7 @@ public class DBUtils {
     }
 
     // Example of insert method
-    public void insertExample(String username, String email) {
+    public void insertExample(String username, String email) throws DatabaseException {
         if (type == ConnectorType.MONGO) {
             Document insertDocument = new Document()
                     .append("username", username)
@@ -49,7 +50,7 @@ public class DBUtils {
 
                 preparedStatement.executeUpdate();
             } catch (SQLException exception) {
-                exception.printStackTrace();
+                throw new DatabaseException("Error with inserting in SQL", exception);
             }
         }
     }

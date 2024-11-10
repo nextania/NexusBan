@@ -1,5 +1,8 @@
 package cloud.nextflow.nexusban.database.types.sql;
 
+import cloud.nextflow.nexusban.database.types.general.DatabaseType;
+import cloud.nextflow.nexusban.database.types.general.DBConnector;
+import cloud.nextflow.nexusban.exceptions.DatabaseException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -7,58 +10,55 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
-public class SQLConnector {
-    private HikariDataSource hikariCP;
+public class SQLConnector extends DBConnector {
+    private final HikariDataSource hikariCP;
+    private final DatabaseType databaseType;
 
-    public SQLConnector(H2 type) {
-        try {
-            HikariConfig hikariConfig = new HikariConfig();
-            hikariConfig.setMinimumIdle(20);
-            hikariConfig.setMaximumPoolSize(10);
-            hikariConfig.setConnectionTestQuery("SELECT 1");
-            hikariConfig.setDriverClassName("org.h2.Driver");
-            hikariConfig.setJdbcUrl("jdbc:h2:./" + type.file);
-            hikariConfig.addDataSourceProperty("user", type.user);
-            hikariConfig.addDataSourceProperty("password", type.password);
-            this.hikariCP = new HikariDataSource(hikariConfig);
-            if (!this.hikariCP.isClosed()) {
-                System.out.println("Connected to H2 DB");
-            } else {
-                System.out.println("Failed to connect to H2 database. Are credentials correct?");
-            }
-            this.initialize();
-        } catch (NullPointerException exception) {
-            exception.printStackTrace();
-            System.out.println("Failed to connect to H2 database.");
+    public SQLConnector(H2 type, Logger logger) throws DatabaseException {
+        super(logger);
+        databaseType = DatabaseType.H2;
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setMinimumIdle(20);
+        hikariConfig.setMaximumPoolSize(10);
+        hikariConfig.setConnectionTestQuery("SELECT 1");
+        hikariConfig.setDriverClassName("org.h2.Driver");
+        hikariConfig.setJdbcUrl("jdbc:h2:./" + type.file);
+        hikariConfig.addDataSourceProperty("user", type.user);
+        hikariConfig.addDataSourceProperty("password", type.password);
+        this.hikariCP = new HikariDataSource(hikariConfig);
+        if (!this.hikariCP.isClosed()) {
+            logger.info("Connected to H2 DB");
+        } else {
+            throw new DatabaseException("Failed to connect to H2 database. Are the credentials correct?");
         }
+        this.initialize();
     }
 
-    public SQLConnector(MariaDB type) {
-        try {
-            HikariConfig hikariConfig = new HikariConfig();
-            hikariConfig.setMinimumIdle(20);
-            hikariConfig.setMaximumPoolSize(10);
-            hikariConfig.setConnectionTestQuery("SELECT 1");
-            hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
-            hikariConfig.setJdbcUrl("jdbc:mariadb://" + type.host + ":" + type.port + "/" + type.database);
-            hikariConfig.addDataSourceProperty("user", type.user);
-            hikariConfig.addDataSourceProperty("password", type.password);
-            this.hikariCP = new HikariDataSource(hikariConfig);
-            if (!this.hikariCP.isClosed()) {
-                System.out.println("Connected to MySQL");
-            } else {
-                System.out.println("Failed to connect to MySQL database. Are credentials correct?");
-            }
-            this.initialize();
-        } catch (NullPointerException exception) {
-            exception.printStackTrace();
-            System.out.println("Failed to connect to MySQL database.");
+    public SQLConnector(MariaDB type, Logger logger) throws DatabaseException {
+        super(logger);
+        databaseType = DatabaseType.MARIADB;
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setMinimumIdle(20);
+        hikariConfig.setMaximumPoolSize(10);
+        hikariConfig.setConnectionTestQuery("SELECT 1");
+        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
+        hikariConfig.setJdbcUrl("jdbc:mariadb://" + type.host + ":" + type.port + "/" + type.database);
+        hikariConfig.addDataSourceProperty("user", type.user);
+        hikariConfig.addDataSourceProperty("password", type.password);
+        this.hikariCP = new HikariDataSource(hikariConfig);
+        if (!this.hikariCP.isClosed()) {
+            logger.info("Connected to MySQL");
+        } else {
+            throw new DatabaseException("Failed to connect to MySQL database. Are credentials correct?");
         }
+        this.initialize();
     }
 
-    public void closeConnections(PreparedStatement preparedStatement, Connection connection, ResultSet resultSet) {
+    public void closeConnections(PreparedStatement preparedStatement, Connection connection, ResultSet resultSet) throws DatabaseException {
         try {
+            if (connection == null) return;
             if (!connection.isClosed()) {
                 if (resultSet != null)
                     resultSet.close();
@@ -66,12 +66,12 @@ public class SQLConnector {
                     preparedStatement.close();
                 connection.close();
             }
-        } catch (SQLException | NullPointerException exception) {
-            exception.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DatabaseException("Error when closing connections!", exception);
         }
     }
 
-    public void initialize() {
+    public void initialize() throws DatabaseException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -79,7 +79,7 @@ public class SQLConnector {
             preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS sc_ (itemstack LONGBLOB, uuid MEDIUMTEXT)");
             preparedStatement.executeUpdate();
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            throw new DatabaseException("Error initializing the database", exception);
         } finally {
             closeConnections(preparedStatement, connection, null);
         }
@@ -87,5 +87,10 @@ public class SQLConnector {
 
     public HikariDataSource getHikariCP() {
         return this.hikariCP;
+    }
+
+    @Override
+    public DatabaseType getDatabaseType() {
+        return databaseType;
     }
 }

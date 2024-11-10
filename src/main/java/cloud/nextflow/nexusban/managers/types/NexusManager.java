@@ -1,17 +1,28 @@
 package cloud.nextflow.nexusban.managers.types;
 
 import cloud.nextflow.nexusban.NexusBan;
+import cloud.nextflow.nexusban.exceptions.ManagerException;
 
 public abstract class NexusManager {
-    private final NexusBan nexusBan;
+    protected final NexusBan nexusBan;
+    protected final String managerName;
 
-    public NexusManager(NexusBan nexusBan) {
+    public NexusManager(NexusBan nexusBan, String managerName) {
         this.nexusBan = nexusBan;
+        this.managerName = managerName;
     }
 
-    public abstract void register();
+    public abstract void register() throws ManagerException;
 
     public NexusBan getNexusBan() {
         return nexusBan;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public boolean getVerboseMode() {
+        return nexusBan.getConfig().getBoolean("verbose");
     }
 }

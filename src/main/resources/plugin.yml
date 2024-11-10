@@ -5,6 +5,7 @@ api-version: '1.21'
 authors: [ Queryzi ]
 description: A plugin that can moderate your server!
 website: www.nextflow.cloud
+depend: [PlaceholderAPI]
 commands:
   ban:
     description: 'Ban someone'

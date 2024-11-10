@@ -13,4 +13,5 @@ mongodb:
   database: "schest"
   collection: "sc_"
 type: h2
+verbose: true
 prefix: "&8[&a&lNexus&f&lBan&8]"

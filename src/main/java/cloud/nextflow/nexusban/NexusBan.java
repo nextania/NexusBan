@@ -1,24 +1,45 @@
 package cloud.nextflow.nexusban;
 
-import cloud.nextflow.nexusban.listeners.PlayerListener;
-import cloud.nextflow.nexusban.listeners.PunishmentListener;
+import cloud.nextflow.nexusban.exceptions.ManagerException;
+import cloud.nextflow.nexusban.managers.commands.CommandManager;
+import cloud.nextflow.nexusban.managers.listeners.ListenerManager;
+import cloud.nextflow.nexusban.managers.messages.MessageManager;
+import cloud.nextflow.nexusban.managers.types.NexusManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public final class NexusBan extends JavaPlugin {
-    private PunishmentListener punishmentListener;
-    private PlayerListener playerListener;
+    ListenerManager listenerManager;
+    MessageManager messageManager;
+    CommandManager commandManager;
 
     @Override
     public void onEnable() {
+        NexusManager[] nexusManagers;
+
+        listenerManager = new ListenerManager(this);
+        messageManager = new MessageManager(this);
+        commandManager = new CommandManager(this);
+
+        nexusManagers = new NexusManager[]{ listenerManager, messageManager, commandManager };
         // Plugin startup logic
         saveDefaultConfig();
-        // register punishment listener
-        punishmentListener = new PunishmentListener(this);
-        getServer().getPluginManager().registerEvents(punishmentListener, this);
-        // register player listener
-        playerListener = new PlayerListener(this);
-        getServer().getPluginManager().registerEvents(playerListener, this);
+        loadManagers(nexusManagers);
         getLogger().info("NexusBan has been enabled!");
+    }
+
+    private void loadManagers(NexusManager[] nexusManagers) {
+        for (NexusManager nexusManager : nexusManagers) {
+            String managerName = nexusManager.getManagerName();
+            try {
+                nexusManager.register();
+            } catch (ManagerException exception) {
+                getLogger().log(Level.SEVERE, "Could not register the " + managerName + "!", exception);
+                getServer().getPluginManager().disablePlugin(this);
+            }
+            getLogger().info("Loaded the " + managerName + "!");
+        }
     }
 
     @Override
