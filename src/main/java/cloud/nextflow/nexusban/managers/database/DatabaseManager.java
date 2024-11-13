@@ -29,6 +29,7 @@ public class DatabaseManager extends NexusManager {
     public void register() throws ManagerException {
         // load configuration
         String databaseTypeString = nexusBan.getConfig().getString("type");
+        if (databaseTypeString == null) throw new ManagerException("Type of database must be specified in config file");
         try {
             databaseType = DatabaseType.valueOf(databaseTypeString);
         } catch (IllegalArgumentException exception) {
@@ -38,7 +39,6 @@ public class DatabaseManager extends NexusManager {
         try {
             switch (databaseType) {
                 case H2 -> {
-                    connectorType = ConnectorType.SQL;
                     String filename = nexusBan.getConfig().getString("h2.file");
                     String username = nexusBan.getConfig().getString("h2.username");
                     String password = nexusBan.getConfig().getString("h2.password");
@@ -50,9 +50,9 @@ public class DatabaseManager extends NexusManager {
                         throw new ManagerException("Error while initializing H2", exception);
                     }
                     dbUtils = new DBUtils(sqlConnector);
+                    nexusBan.getLogger().info("Loaded");
                 }
                 case MARIADB -> {
-                    connectorType = ConnectorType.SQL;
                     String host = nexusBan.getConfig().getString("mariadb.host");
                     String username = nexusBan.getConfig().getString("mariadb.username");
                     String password = nexusBan.getConfig().getString("mariadb.password");

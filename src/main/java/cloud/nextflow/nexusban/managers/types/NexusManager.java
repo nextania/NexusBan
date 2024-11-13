@@ -21,8 +21,4 @@ public abstract class NexusManager {
     public String getManagerName() {
         return managerName;
     }
-
-    public boolean getVerboseMode() {
-        return nexusBan.getConfig().getBoolean("verbose");
-    }
 }

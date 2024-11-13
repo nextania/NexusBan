@@ -13,6 +13,6 @@ public class PunishmentListener extends NexusListener {
 
     @EventHandler
     public void onPunishment(PunishmentEvent event) {
-        nexusBan.getServer().getLogger().info("Punishment event has been called!");
+        nexusBan.getLogger().info("Punishment event has been called!");
     }
 }

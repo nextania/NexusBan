@@ -4,26 +4,35 @@ import cloud.nextflow.nexusban.NexusBan;
 import cloud.nextflow.nexusban.exceptions.ManagerException;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class MessageManager extends NexusManager {
     private File configFile;
     private FileConfiguration config;
 
     public MessageManager(NexusBan nexusBan) {
-        super(nexusBan, "MessageManager");
+        super(nexusBan, "Message Manager");
     }
 
     public String loadMessage(Player player, String configName, String... params) {
-        String message = config.getString(configName);
+        // check if config.getString() is null and put try catch
+        String message = Objects.requireNonNull(config.getString(configName));
         message = replaceOccurrence(message, params);
         message = replacePAPI(player, message);
-        return message;
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public String loadMessagePrefix(Player player, String configName, String... params) {
+        // put try catch and make sure config.getString() isn't null
+        return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("prefix")))
+                + " " + loadMessage(player, configName, params);
     }
 
     @Override
@@ -37,7 +46,7 @@ public class MessageManager extends NexusManager {
         int counter = 1;
         // check counter in messages.yml to make sure it adds up
         for (String toReplace : toReplaceList) {
-            main = main.replace("$" + String.valueOf(counter), toReplace);
+            main = main.replace("$" + counter++, toReplace);
         }
         return main;
     }
@@ -50,12 +59,13 @@ public class MessageManager extends NexusManager {
         return config;
     }
 
-    public void save() {
+    public void save() throws ManagerException {
         try {
             config.save(configFile);
         } catch (IOException e) {
-            nexusBan.getLogger().severe("Couldn't save the messages.yml file to disk");
-            nexusBan.getServer().getPluginManager().disablePlugin(nexusBan);
+            throw new ManagerException("Couldn't save the messages.yml file to disk", e);
+//            nexusBan.getLogger().severe("Couldn't save the messages.yml file to disk");
+//            nexusBan.getServer().getPluginManager().disablePlugin(nexusBan);
         }
     }
 

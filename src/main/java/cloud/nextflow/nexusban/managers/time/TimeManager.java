@@ -6,7 +6,7 @@ import cloud.nextflow.nexusban.managers.types.NexusManager;
 
 public class TimeManager extends NexusManager {
     public TimeManager(NexusBan nexusBan) {
-        super(nexusBan, "TimeManager");
+        super(nexusBan, "Time Manager");
     }
 
     @Override

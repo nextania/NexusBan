@@ -11,7 +11,7 @@ public class ListenerManager extends NexusManager {
     private PlayerListener playerListener;
 
     public ListenerManager(NexusBan nexusBan) {
-        super(nexusBan, "ListenerManager");
+        super(nexusBan, "Listener Manager");
     }
 
     @Override
@@ -19,13 +19,13 @@ public class ListenerManager extends NexusManager {
         // register punishment listener
         punishmentListener = new PunishmentListener(nexusBan);
         nexusBan.getServer().getPluginManager().registerEvents(punishmentListener, nexusBan);
-        if (getVerboseMode()) {
+        if (NexusBan.getConfigManager().getVerboseMode()) {
             nexusBan.getLogger().info("Loaded the punishment listener!");
         }
         // register player listener
         playerListener = new PlayerListener(nexusBan);
         nexusBan.getServer().getPluginManager().registerEvents(playerListener, nexusBan);
-        if (getVerboseMode()) {
+        if (NexusBan.getConfigManager().getVerboseMode()) {
             nexusBan.getLogger().info("Loaded the player listener!");
         }
     }
