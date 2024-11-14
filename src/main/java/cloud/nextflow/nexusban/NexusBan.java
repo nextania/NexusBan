@@ -9,8 +9,6 @@ import cloud.nextflow.nexusban.managers.messages.MessageManager;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.logging.Level;
 
 public final class NexusBan extends JavaPlugin {
@@ -35,18 +33,14 @@ public final class NexusBan extends JavaPlugin {
         nexusManagers = new NexusManager[]{ listenerManager, commandManager, databaseManager };
         // Plugin startup logic
         saveDefaultConfig();
-        loadManagers(nexusManagers);
+        loadManagers(earlyNexusManagers, nexusManagers);
         getLogger().info("NexusBan has been enabled!");
     }
 
-    private void loadManagers(NexusManager[] nexusManagers) {
-        NexusManager configManager = Arrays.stream(nexusManagers).filter(r -> commandManager.getManagerName().equals("Config Manager")).findFirst().orElse(null);
-        if (configManager == null) {
-            getLogger().severe("Could not load the config manager");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+    private void loadManagers(NexusManager[] earlyNexusManagers, NexusManager[] nexusManagers) {
+        for (NexusManager earlyNexusManager : earlyNexusManagers) {
+            registerManager(earlyNexusManager);
         }
-        registerManager(configManager);
         for (NexusManager nexusManager : nexusManagers) {
             registerManager(nexusManager);
         }
@@ -64,12 +58,28 @@ public final class NexusBan extends JavaPlugin {
         getLogger().info("Loaded the " + managerName + "!");
     }
 
+    // static managers
+
     public static ConfigManager getConfigManager() {
         return configManager;
     }
 
     public static MessageManager getMessageManager() {
         return messageManager;
+    }
+
+    // non-static managers
+
+    public ListenerManager getListenerManager() {
+        return listenerManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     @Override
