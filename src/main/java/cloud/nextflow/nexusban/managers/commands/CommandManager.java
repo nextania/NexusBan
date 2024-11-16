@@ -14,19 +14,24 @@ import java.util.Objects;
 
 public class CommandManager extends NexusManager {
     private final List<NexusCommand> nexusCommands = new ArrayList<>();
-    private final MessageManager messageManager;
-    private final ConfigManager configManager;
+    private MessageManager messageManager;
+    private ConfigManager configManager;
 
     public CommandManager(NexusBan nexusBan) {
         super(nexusBan, "Command Manager");
-        messageManager = NexusBan.getMessageManager();
-        configManager = NexusBan.getConfigManager();
-        // add all commands into list
+    }
+
+    public void loadCommands() throws ManagerException {
+        messageManager = MessageManager.getMessageManager();
+        configManager = ConfigManager.getConfigManager();
+
+        //add all commands
         nexusCommands.add(new TestCommand(messageManager, configManager));
     }
 
     @Override
     public void register() throws ManagerException {
+        this.loadCommands();
         for (NexusCommand nexusCommand : nexusCommands) {
             try {
                 Objects.requireNonNull(nexusBan.getCommand(nexusCommand.getName())).setExecutor(nexusCommand);

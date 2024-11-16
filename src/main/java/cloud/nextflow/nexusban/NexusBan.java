@@ -15,8 +15,8 @@ public final class NexusBan extends JavaPlugin {
     private ListenerManager listenerManager;
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
-    private static MessageManager messageManager;
-    private static ConfigManager configManager;
+    private MessageManager messageManager;
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
@@ -40,10 +40,13 @@ public final class NexusBan extends JavaPlugin {
     private void loadManagers(NexusManager[] earlyNexusManagers, NexusManager[] nexusManagers) {
         for (NexusManager earlyNexusManager : earlyNexusManagers) {
             registerManager(earlyNexusManager);
+            //getLogger().info("Loaded the early nexus manager: " + earlyNexusManager.getManagerName());
         }
+        //getLogger().info("Loaded early managers");
         for (NexusManager nexusManager : nexusManagers) {
             registerManager(nexusManager);
         }
+        //getLogger().info("Loaded regular managers");
     }
 
     private void registerManager(NexusManager nexusManager) {
@@ -56,30 +59,6 @@ public final class NexusBan extends JavaPlugin {
             return;
         }
         getLogger().info("Loaded the " + managerName + "!");
-    }
-
-    // static managers
-
-    public static ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public static MessageManager getMessageManager() {
-        return messageManager;
-    }
-
-    // non-static managers
-
-    public ListenerManager getListenerManager() {
-        return listenerManager;
-    }
-
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
     }
 
     @Override

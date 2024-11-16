@@ -31,7 +31,7 @@ public class DatabaseManager extends NexusManager {
         String databaseTypeString = nexusBan.getConfig().getString("type");
         if (databaseTypeString == null) throw new ManagerException("Type of database must be specified in config file");
         try {
-            databaseType = DatabaseType.valueOf(databaseTypeString);
+            databaseType = DatabaseType.valueOf(databaseTypeString.toUpperCase());
         } catch (IllegalArgumentException exception) {
             throw new ManagerException("Invalid database type!", exception);
         }

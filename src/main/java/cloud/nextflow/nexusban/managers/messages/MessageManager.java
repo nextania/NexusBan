@@ -16,6 +16,7 @@ import java.util.Objects;
 public class MessageManager extends NexusManager {
     private File configFile;
     private FileConfiguration config;
+    private static MessageManager messageManager;
 
     public MessageManager(NexusBan nexusBan) {
         super(nexusBan, "Message Manager");
@@ -40,6 +41,7 @@ public class MessageManager extends NexusManager {
         nexusBan.saveResource("messages.yml", false);
         configFile = new File(nexusBan.getDataFolder(), "messages.yml");
         config = YamlConfiguration.loadConfiguration(configFile);
+        messageManager = this;
     }
 
     private String replaceOccurrence(String main, String... toReplaceList) {
@@ -71,5 +73,9 @@ public class MessageManager extends NexusManager {
 
     public void reload() {
         config = YamlConfiguration.loadConfiguration(configFile);
+    }
+
+    public static MessageManager getMessageManager() {
+        return messageManager;
     }
 }
