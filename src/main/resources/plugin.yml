@@ -14,6 +14,126 @@ commands:
     permission: nexusban.test
     usage: /test <ing>
 permissions:
+  # root parent level permissions
   nexusban.*:
+    description: Permission to use all nexusban commands
+    default: op
     children:
+      nexusban.silent.*: true
+      nexusban.command.*: true
       nexusban.test: true
+      nexusban.immune: true
+  # silent event parent level permissions
+  nexusban.silent.*:
+    description: Permission to receive silent broadcasts about punishments
+    default: op
+    children:
+      nexusban.silent.warn: true
+      nexusban.silent.mute: true
+      nexusban.silent.kick: true
+      nexusban.silent.ban: true
+      nexusban.silent.case: true
+      nexusban.silent.history: true
+  # silent event children level permissions
+  nexusban.silent.warn:
+    description: Permission to recieve silent broadcasts about warnings
+    default: op
+  nexusban.silent.mute:
+    description: Permission to recieve silent broadcasts about mutes
+    default: op
+  nexusban.silent.kick:
+    description: Permission to recieve silent broadcasts about kicks
+    default: op
+  nexusban.silent.ban:
+    description: Permission to recieve silent broadcasts about bans
+    default: op
+  nexusban.silent.case:
+    description: Permission to recieve silent broadcasts about cases
+    default: op
+  nexusban.silent.history:
+    description: Permission to recieve silent broadcasts about history requests
+    default: op
+  # command parent level permissions
+  nexusban.command.*:
+    description: Permission to use nexusban commands
+    default: op
+    children:
+      nexusban.command.case.*: true
+      nexusban.command.warn: true
+      nexusban.command.tempwarn: true
+      nexusban.command.unwarn: true
+      nexusban.command.mute: true
+      nexusban.command.tempmute: true
+      nexusban.command.unmute: true
+      nexusban.command.kick: true
+      nexusban.command.ban: true
+      nexusban.command.tempban: true
+      nexusban.command.ipban: true
+      nexusban.command.tempipban: true
+      nexusban.command.unban: true
+      nexusban.command.history: true
+  # case parent level permissions
+  nexusban.command.case.*:
+    description: Permission to use the case command and sub-commands within it
+    default: op
+    children:
+      nexusban.command.case.add: true
+      nexusban.command.case.remove: true
+      nexusban.command.case.info: true
+  # case children level permissions
+  nexusban.command.case.add:
+    description: Permission to add a punishment case
+    default: op
+  nexusban.command.case.remove:
+    description: Permission to remove a punishment case
+    default: op
+  nexusban.command.case.info:
+    description: Permission to find the info of a particular punishment case
+    default: op
+  # command children level permissions
+  nexusban.command.warn:
+    description: Permission to warn someone permanently
+    default: op
+  nexusban.command.tempwarn:
+    description: Permission to warn someone temporarily
+    default: op
+  nexusban.command.unwarn:
+    description: Permission to remove a warn from someone
+    default: op
+  nexusban.command.mute:
+    description: Permission to mute someone permanently
+    default: op
+  nexusban.command.tempmute:
+    description: Permission to mute someone temporarily
+    default: op
+  nexusban.command.unmute:
+    description: Permission to remove a mute from someone
+    default: op
+  nexusban.command.kick:
+    description: Permission to kick someone
+    default: op
+  nexusban.command.ban:
+    description: Permission to ban someone permanently
+    default: op
+  nexusban.command.tempban:
+    description: Permission to ban someone temporarily
+    default: op
+  nexusban.command.ipban:
+    description: Permission to ban someone via their ip permanently
+    default: op
+  nexusban.command.tempipban:
+    description: Permission to ban someone via their ip temporarily
+    default: op
+  nexusban.command.unban:
+    description: Permission to remove a ban from someone
+    default: op
+  nexusban.command.history:
+    description: Permission to find the history of someone
+    default: op
+  # nexusban children level permissions
+  nexusban.test:
+    description: Permission to use test command
+    default: op
+  nexusban.immune:
+    description: Permission to be immune to all moderation actions
+    default: op

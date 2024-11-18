@@ -12,25 +12,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Level;
 
 public final class NexusBan extends JavaPlugin {
-    private ListenerManager listenerManager;
-    private CommandManager commandManager;
+    private static NexusBan nexusBan;
     private DatabaseManager databaseManager;
-    private MessageManager messageManager;
-    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
         NexusManager[] nexusManagers;
         NexusManager[] earlyNexusManagers;
 
-        listenerManager = new ListenerManager(this);
-        commandManager = new CommandManager(this);
-        databaseManager = new DatabaseManager(this);
-        configManager = new ConfigManager(this);
-        messageManager = new MessageManager(this);
+        nexusBan = this;
 
-        earlyNexusManagers = new NexusManager[]{ configManager, messageManager };
-        nexusManagers = new NexusManager[]{ listenerManager, commandManager, databaseManager };
+        ListenerManager listenerManager = new ListenerManager(this);
+        CommandManager commandManager = new CommandManager(this);
+        ConfigManager configManager = new ConfigManager(this);
+        MessageManager messageManager = new MessageManager(this);
+
+        earlyNexusManagers = new NexusManager[]{configManager, messageManager};
+        nexusManagers = new NexusManager[]{listenerManager, commandManager};
         // Plugin startup logic
         saveDefaultConfig();
         loadManagers(earlyNexusManagers, nexusManagers);
@@ -42,6 +40,8 @@ public final class NexusBan extends JavaPlugin {
             registerManager(earlyNexusManager);
             //getLogger().info("Loaded the early nexus manager: " + earlyNexusManager.getManagerName());
         }
+        databaseManager = new DatabaseManager(this);
+        registerManager(databaseManager);
         //getLogger().info("Loaded early managers");
         for (NexusManager nexusManager : nexusManagers) {
             registerManager(nexusManager);
@@ -66,5 +66,9 @@ public final class NexusBan extends JavaPlugin {
         // Plugin shutdown logic
         saveDefaultConfig();
         getLogger().info("NexusBan has been enabled!");
+    }
+
+    public static NexusBan getNexusBan() {
+        return nexusBan;
     }
 }

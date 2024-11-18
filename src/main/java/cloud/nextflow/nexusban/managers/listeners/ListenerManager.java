@@ -8,8 +8,6 @@ import cloud.nextflow.nexusban.managers.config.ConfigManager;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
 
 public class ListenerManager extends NexusManager {
-    private PunishmentListener punishmentListener;
-    private PlayerListener playerListener;
 
     public ListenerManager(NexusBan nexusBan) {
         super(nexusBan, "Listener Manager");
@@ -18,13 +16,13 @@ public class ListenerManager extends NexusManager {
     @Override
     public void register() throws ManagerException {
         // register punishment listener
-        punishmentListener = new PunishmentListener(nexusBan);
+        PunishmentListener punishmentListener = new PunishmentListener(nexusBan);
         nexusBan.getServer().getPluginManager().registerEvents(punishmentListener, nexusBan);
         if (ConfigManager.getConfigManager().getVerboseMode()) {
             nexusBan.getLogger().info("Loaded the punishment listener!");
         }
         // register player listener
-        playerListener = new PlayerListener(nexusBan);
+        PlayerListener playerListener = new PlayerListener(nexusBan);
         nexusBan.getServer().getPluginManager().registerEvents(playerListener, nexusBan);
         if (ConfigManager.getConfigManager().getVerboseMode()) {
             nexusBan.getLogger().info("Loaded the player listener!");

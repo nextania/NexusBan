@@ -13,13 +13,15 @@ import cloud.nextflow.nexusban.database.types.sql.SQLConnector;
 import cloud.nextflow.nexusban.exceptions.DatabaseConfigException;
 import cloud.nextflow.nexusban.exceptions.DatabaseException;
 import cloud.nextflow.nexusban.exceptions.ManagerException;
+import cloud.nextflow.nexusban.managers.config.ConfigManager;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
 
 public class DatabaseManager extends NexusManager {
-
+    private static DatabaseManager databaseManager;
     private DBUtils dbUtils;
     private DatabaseType databaseType;
     private ConnectorType connectorType = ConnectorType.SQL;
+    private ConfigManager configManager;
 
     public DatabaseManager(NexusBan nexusBan) {
         super(nexusBan, "Database Manager");
@@ -28,21 +30,14 @@ public class DatabaseManager extends NexusManager {
     @Override
     public void register() throws ManagerException {
         // load configuration
-        String databaseTypeString = nexusBan.getConfig().getString("type");
-        if (databaseTypeString == null) throw new ManagerException("Type of database must be specified in config file");
-        try {
-            databaseType = DatabaseType.valueOf(databaseTypeString.toUpperCase());
-        } catch (IllegalArgumentException exception) {
-            throw new ManagerException("Invalid database type!", exception);
-        }
+        databaseManager = this;
+        configManager = ConfigManager.getConfigManager();
+        databaseType = configManager.getDatabaseType();
 
         try {
             switch (databaseType) {
                 case H2 -> {
-                    String filename = nexusBan.getConfig().getString("h2.file");
-                    String username = nexusBan.getConfig().getString("h2.username");
-                    String password = nexusBan.getConfig().getString("h2.password");
-                    H2 h2 = new H2(filename, username, password);
+                    H2 h2 = configManager.getH2Config();
                     SQLConnector sqlConnector;
                     try {
                         sqlConnector = DatabaseAPI.getHikariCP(h2, nexusBan.getLogger());
@@ -50,15 +45,9 @@ public class DatabaseManager extends NexusManager {
                         throw new ManagerException("Error while initializing H2", exception);
                     }
                     dbUtils = new DBUtils(sqlConnector);
-                    nexusBan.getLogger().info("Loaded");
                 }
                 case MARIADB -> {
-                    String host = nexusBan.getConfig().getString("mariadb.host");
-                    String username = nexusBan.getConfig().getString("mariadb.username");
-                    String password = nexusBan.getConfig().getString("mariadb.password");
-                    String database = nexusBan.getConfig().getString("mariadb.database");
-                    int port = nexusBan.getConfig().getInt("mariadb.port");
-                    MariaDB mariaDB = new MariaDB(host, port, database, username, password);
+                    MariaDB mariaDB = configManager.getMariaDBConfig();
                     SQLConnector sqlConnector;
                     try {
                         sqlConnector = DatabaseAPI.getHikariCP(mariaDB, nexusBan.getLogger());
@@ -69,10 +58,7 @@ public class DatabaseManager extends NexusManager {
                 }
                 case MONGODB -> {
                     connectorType = ConnectorType.MONGO;
-                    String uri = nexusBan.getConfig().getString("mongodb.uri");
-                    String database = nexusBan.getConfig().getString("mongodb.database");
-                    String collection = nexusBan.getConfig().getString("mongodb.collection");
-                    MongoDB mongoDB = new MongoDB(uri, database, collection);
+                    MongoDB mongoDB = configManager.getMongoDBConfig();
                     MongoConnector mongoConnector;
                     try {
                         mongoConnector = DatabaseAPI.getMongoConnector(mongoDB, nexusBan.getLogger());
@@ -97,5 +83,9 @@ public class DatabaseManager extends NexusManager {
 
     public ConnectorType getConnectorType() {
         return connectorType;
+    }
+
+    public static DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 }
