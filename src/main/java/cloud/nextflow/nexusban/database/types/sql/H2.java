@@ -1,6 +1,6 @@
 package cloud.nextflow.nexusban.database.types.sql;
 
-import cloud.nextflow.nexusban.exceptions.DatabaseConfigException;
+import cloud.nextflow.nexusban.database.types.exceptions.DatabaseConfigException;
 
 public class H2 implements SQLType {
     public String file;

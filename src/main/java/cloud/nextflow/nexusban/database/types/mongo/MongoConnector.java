@@ -2,7 +2,7 @@ package cloud.nextflow.nexusban.database.types.mongo;
 
 import cloud.nextflow.nexusban.database.types.general.DatabaseType;
 import cloud.nextflow.nexusban.database.types.general.DBConnector;
-import cloud.nextflow.nexusban.exceptions.DatabaseException;
+import cloud.nextflow.nexusban.database.types.exceptions.DatabaseException;
 import com.mongodb.MongoClientException;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;

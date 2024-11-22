@@ -59,18 +59,11 @@ permissions:
     default: op
     children:
       nexusban.command.case.*: true
-      nexusban.command.warn: true
-      nexusban.command.tempwarn: true
-      nexusban.command.unwarn: true
-      nexusban.command.mute: true
-      nexusban.command.tempmute: true
-      nexusban.command.unmute: true
+      nexusban.command.warn.*: true
+      nexusban.command.mute.*: true
       nexusban.command.kick: true
-      nexusban.command.ban: true
-      nexusban.command.tempban: true
-      nexusban.command.ipban: true
-      nexusban.command.tempipban: true
-      nexusban.command.unban: true
+      nexusban.command.ban.*: true
+      nexusban.command.ipban.*: true
       nexusban.command.history: true
   # case parent level permissions
   nexusban.command.case.*:
@@ -90,42 +83,81 @@ permissions:
   nexusban.command.case.info:
     description: Permission to find the info of a particular punishment case
     default: op
-  # command children level permissions
-  nexusban.command.warn:
+  # warn parent level permissions
+  nexusban.command.warn.*:
+    description: Permission to use the warning related commands
+    default: op
+    children:
+      nexusban.command.warn.perm: true
+      nexusban.command.warn.temp: true
+      nexusban.command.warn.remove: true
+  # warn children level permissions
+  nexusban.command.warn.perm:
     description: Permission to warn someone permanently
     default: op
-  nexusban.command.tempwarn:
+  nexusban.command.warn.temp:
     description: Permission to warn someone temporarily
     default: op
-  nexusban.command.unwarn:
+  nexusban.command.warn.remove:
     description: Permission to remove a warn from someone
     default: op
-  nexusban.command.mute:
+  # mute parent level permissions
+  nexusban.command.mute.*:
+    description: Permission to use the mute related commands
+    default: op
+    children:
+      nexusban.command.mute.perm: true
+      nexusban.command.mute.temp: true
+      nexusban.command.mute.remove: true
+  # mute children level permissions
+  nexusban.command.mute.perm:
     description: Permission to mute someone permanently
     default: op
-  nexusban.command.tempmute:
+  nexusban.command.mute.temp:
     description: Permission to mute someone temporarily
     default: op
-  nexusban.command.unmute:
+  nexusban.command.mute.remove:
     description: Permission to remove a mute from someone
     default: op
-  nexusban.command.kick:
-    description: Permission to kick someone
+  # ban parent level permissions
+  nexusban.command.ban.*:
+    description: Permission to use the ban related commands
     default: op
-  nexusban.command.ban:
+    children:
+      nexusban.command.ban.perm: true
+      nexusban.command.ban.temp: true
+      nexusban.command.ban.remove: true
+  # ban children level permissions
+  nexusban.command.ban.perm:
     description: Permission to ban someone permanently
     default: op
-  nexusban.command.tempban:
+  nexusban.command.ban.temp:
     description: Permission to ban someone temporarily
     default: op
-  nexusban.command.ipban:
+  nexusban.command.ban.remove:
+    description: Permission to remove a ban from someone
+    default: op
+  # ip-ban parent level permissions
+  nexusban.command.ipban.*:
+    description: Permission to use the ban via ip related commands
+    default: op
+    children:
+      nexusban.command.ipban.perm: true
+      nexusban.command.ipban.temp: true
+      nexusban.command.ipban.remove: true
+  # ip-ban children level permissions
+  nexusban.command.ipban.perm:
     description: Permission to ban someone via their ip permanently
     default: op
-  nexusban.command.tempipban:
+  nexusban.command.ipban.temp:
     description: Permission to ban someone via their ip temporarily
     default: op
-  nexusban.command.unban:
-    description: Permission to remove a ban from someone
+  nexusban.command.ipban.remove:
+    description: Permission to remove a ban via ip from someone
+    default: op
+  # command children level permissions
+  nexusban.command.kick:
+    description: Permission to kick someone
     default: op
   nexusban.command.history:
     description: Permission to find the history of someone

@@ -1,6 +1,7 @@
 package cloud.nextflow.nexusban.types;
 
 public class Punishment {
+    private PunishmentType punishmentType;
     private String caseID;
     private String punishedUUID;
     private String punisherUUID;
@@ -9,19 +10,16 @@ public class Punishment {
     private long endDate;
     private String time;
     private boolean permanent;
-    
-    public Punishment(String caseID, String punishedUUID, String punisherUUID, String reason, long startDate, long endDate, String time) {
-        this.caseID = caseID;
-        this.punishedUUID = punishedUUID;
-        this.punisherUUID = punisherUUID;
-        this.reason = reason;
-        this.startDate = startDate;
+
+    public Punishment(PunishmentType punishmentType, String caseID, String punishedUUID, String punisherUUID, String reason, long startDate, long endDate, String time) {
+        this(punishmentType, caseID, punishedUUID, punisherUUID, reason, startDate);
         this.endDate = endDate;
         this.time = time;
         this.permanent = false;
     }
     
-    public Punishment(String caseID, String punishedUUID, String punisherUUID, String reason, long startDate) {
+    public Punishment(PunishmentType punishmentType, String caseID, String punishedUUID, String punisherUUID, String reason, long startDate) {
+        this.punishmentType = punishmentType;
         this.caseID = caseID;
         this.punishedUUID = punishedUUID;
         this.punisherUUID = punisherUUID;
@@ -92,5 +90,13 @@ public class Punishment {
 
     public void setPermanent(boolean permanent) {
         this.permanent = permanent;
+    }
+
+    public PunishmentType getPunishmentType() {
+        return punishmentType;
+    }
+
+    public void setPunishmentType(PunishmentType punishmentType) {
+        this.punishmentType = punishmentType;
     }
 }

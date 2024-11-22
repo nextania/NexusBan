@@ -4,7 +4,7 @@ import cloud.nextflow.nexusban.database.types.general.ConnectorType;
 import cloud.nextflow.nexusban.database.types.mongo.MongoConnector;
 import cloud.nextflow.nexusban.database.types.sql.SQLConnector;
 
-import cloud.nextflow.nexusban.exceptions.DatabaseException;
+import cloud.nextflow.nexusban.database.types.exceptions.DatabaseException;
 import org.bson.Document;
 
 import java.sql.Connection;

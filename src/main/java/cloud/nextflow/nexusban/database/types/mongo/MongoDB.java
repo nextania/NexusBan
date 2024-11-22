@@ -1,6 +1,6 @@
 package cloud.nextflow.nexusban.database.types.mongo;
 
-import cloud.nextflow.nexusban.exceptions.DatabaseConfigException;
+import cloud.nextflow.nexusban.database.types.exceptions.DatabaseConfigException;
 
 public class MongoDB implements MongoType {
     public String uri;

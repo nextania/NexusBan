@@ -4,8 +4,8 @@ import cloud.nextflow.nexusban.database.types.mongo.MongoConnector;
 import cloud.nextflow.nexusban.database.types.mongo.MongoDB;
 import cloud.nextflow.nexusban.database.types.sql.H2;
 import cloud.nextflow.nexusban.database.types.sql.SQLConnector;
-import cloud.nextflow.nexusban.database.types.sql.MariaDB;
-import cloud.nextflow.nexusban.exceptions.DatabaseException;
+import cloud.nextflow.nexusban.database.types.sql.mysql.MariaDB;
+import cloud.nextflow.nexusban.database.types.exceptions.DatabaseException;
 
 import java.util.HashMap;
 import java.util.Map;

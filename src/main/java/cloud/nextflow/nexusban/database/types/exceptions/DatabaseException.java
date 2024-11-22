@@ -1,4 +1,4 @@
-package cloud.nextflow.nexusban.exceptions;
+package cloud.nextflow.nexusban.database.types.exceptions;
 
 public class DatabaseException extends Exception {
     public DatabaseException(Throwable cause) {
