@@ -65,7 +65,8 @@ public class SQLConnector extends DBConnector {
         hikariConfig.setMinimumIdle(20);
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setConnectionTestQuery("SELECT 1");
-        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
+        // fix this to reflect mysql jdbc driver
+        hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
         hikariConfig.setJdbcUrl("jdbc:mariadb://" + type.host + ":" + type.port + "/" + type.database);
         hikariConfig.addDataSourceProperty("user", type.user);
         hikariConfig.addDataSourceProperty("password", type.password);
