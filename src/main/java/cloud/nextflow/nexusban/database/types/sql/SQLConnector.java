@@ -25,7 +25,7 @@ public class SQLConnector extends DBConnector {
         hikariConfig.setMinimumIdle(20);
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setConnectionTestQuery("SELECT 1");
-        hikariConfig.setDriverClassName("org.h2.Driver");
+        hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
         hikariConfig.setJdbcUrl("jdbc:h2:./" + type.file);
         hikariConfig.addDataSourceProperty("user", type.user);
         hikariConfig.addDataSourceProperty("password", type.password);
@@ -45,7 +45,7 @@ public class SQLConnector extends DBConnector {
         hikariConfig.setMinimumIdle(20);
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setConnectionTestQuery("SELECT 1");
-        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
+        hikariConfig.setDataSourceClassName("org.mariadb.jdbc.MariaDbDataSource");
         hikariConfig.setJdbcUrl("jdbc:mariadb://" + type.host + ":" + type.port + "/" + type.database);
         hikariConfig.addDataSourceProperty("user", type.user);
         hikariConfig.addDataSourceProperty("password", type.password);

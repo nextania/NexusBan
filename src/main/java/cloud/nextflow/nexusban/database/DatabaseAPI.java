@@ -6,6 +6,7 @@ import cloud.nextflow.nexusban.database.types.sql.H2;
 import cloud.nextflow.nexusban.database.types.sql.SQLConnector;
 import cloud.nextflow.nexusban.database.types.sql.mysql.MariaDB;
 import cloud.nextflow.nexusban.database.types.exceptions.DatabaseException;
+import cloud.nextflow.nexusban.database.types.sql.mysql.MySQL;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,17 @@ public class DatabaseAPI {
     }
 
     public static SQLConnector getHikariCP(MariaDB type, Logger logger) throws DatabaseException {
+        if (hikariCP.containsKey(type.database)) {
+            return hikariCP.get(type.database);
+        } else {
+            SQLConnector hikari = new SQLConnector(type, logger);
+            hikari.initialize();
+            hikariCP.put(type.database, hikari);
+            return hikari;
+        }
+    }
+
+    public static SQLConnector getHikariCP(MySQL type, Logger logger) throws DatabaseException {
         if (hikariCP.containsKey(type.database)) {
             return hikariCP.get(type.database);
         } else {
