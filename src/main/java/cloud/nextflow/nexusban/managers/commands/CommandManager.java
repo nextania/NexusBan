@@ -1,7 +1,7 @@
 package cloud.nextflow.nexusban.managers.commands;
 
 import cloud.nextflow.nexusban.NexusBan;
-import cloud.nextflow.nexusban.commands.TestCommand;
+import cloud.nextflow.nexusban.commands.test.TestCommand;
 import cloud.nextflow.nexusban.commands.type.NexusCommand;
 import cloud.nextflow.nexusban.exceptions.ManagerException;
 import cloud.nextflow.nexusban.managers.config.ConfigManager;

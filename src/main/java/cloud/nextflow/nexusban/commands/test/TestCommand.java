@@ -1,4 +1,4 @@
-package cloud.nextflow.nexusban.commands;
+package cloud.nextflow.nexusban.commands.test;
 
 import cloud.nextflow.nexusban.commands.type.NexusCommand;
 import cloud.nextflow.nexusban.managers.config.ConfigManager;

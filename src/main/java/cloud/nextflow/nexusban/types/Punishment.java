@@ -46,11 +46,11 @@ public class Punishment {
         this.caseID = caseID;
     }
 
-    public String getpunishedUUID() {
+    public String getPunishedUUID() {
         return punishedUUID;
     }
 
-    public void setpunishedUUID(String punishedUUID) {
+    public void setPunishedUUID(String punishedUUID) {
         this.punishedUUID = punishedUUID;
     }
 

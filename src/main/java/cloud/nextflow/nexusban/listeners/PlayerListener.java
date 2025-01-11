@@ -3,6 +3,7 @@ package cloud.nextflow.nexusban.listeners;
 import cloud.nextflow.nexusban.NexusBan;
 import cloud.nextflow.nexusban.listeners.types.NexusListener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerListener extends NexusListener {
@@ -13,6 +14,11 @@ public class PlayerListener extends NexusListener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
 
     }
 }

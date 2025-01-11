@@ -7,6 +7,7 @@ import cloud.nextflow.nexusban.managers.database.DatabaseManager;
 import cloud.nextflow.nexusban.managers.listeners.ListenerManager;
 import cloud.nextflow.nexusban.managers.messages.MessageManager;
 import cloud.nextflow.nexusban.managers.players.PlayerManager;
+import cloud.nextflow.nexusban.managers.punishments.PunishmentManager;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,9 +29,10 @@ public final class NexusBan extends JavaPlugin {
         ConfigManager configManager = new ConfigManager(this);
         MessageManager messageManager = new MessageManager(this);
         PlayerManager playerManager = new PlayerManager(this);
+        PunishmentManager punishmentManager = new PunishmentManager(this);
 
         earlyNexusManagers = new NexusManager[]{configManager, messageManager};
-        nexusManagers = new NexusManager[]{listenerManager, commandManager, playerManager};
+        nexusManagers = new NexusManager[]{listenerManager, commandManager, playerManager, punishmentManager};
         // Plugin startup logic
         saveDefaultConfig();
         loadManagers(earlyNexusManagers, nexusManagers);
@@ -40,6 +42,7 @@ public final class NexusBan extends JavaPlugin {
                 getLogger().info("Integrated into PlaceHolderAPI");
             }
         }
+        this.loadPunishments();
         getLogger().info("NexusBan has been enabled!");
     }
 
@@ -67,6 +70,10 @@ public final class NexusBan extends JavaPlugin {
             return;
         }
         getLogger().info("Loaded the " + managerName + "!");
+    }
+
+    private void loadPunishments() {
+
     }
 
     @Override

@@ -3,9 +3,80 @@ chat:
   no-permission: "&cUnfortunately, you do not have permission to run this command!"
   ban:
     silent:
-      permanent: "&8[&2Silent&8] &a$1 &7has been permanently banned by &c$2 &7for &2$3&7."
-      temporary: "&8[&2Silent&8] &a$1 &7has been temporarily banned by &c$2 &7for &4$3 &7because of &2$4&7."
+      permanent:
+        message: "&8[&2Silent&8] &a{punishee} &7has been permanently banned by &c{punisher} &7for &2{reason}&7."
+      temporary:
+        message: "&8[&2Silent&8] &a{punishee} &7has been temporarily banned by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
     permanent:
-      -
+      message:
+        - "&8---------------------------------------------------------"
+        - "&a"
+        - "&a{punishee} &7has been permanently banned by &c{punisher} &7for &2{reason}&7."
+        - "&a"
+        - "&8---------------------------------------------------------"
     temporary:
-      -
+      message:
+        - "&8---------------------------------------------------------"
+        - "&a"
+        - "&8[&2Silent&8] &a{punishee} &7has been temporarily banned by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
+        - "&a"
+        - "&8---------------------------------------------------------"
+  ipban:
+    silent:
+      permanent:
+        message: "&8[&2Silent&8] &a{punishee} &7has been permanently ip-banned by &c{punisher} &7for &2{reason}&7."
+      temporary:
+        message: "&8[&2Silent&8] &a{punishee} &7has been temporarily ip-banned by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
+    permanent:
+      message:
+        - "&8---------------------------------------------------------"
+        - "&a"
+        - "&a{punishee} &7has been permanently ip-banned by &c{punisher} &7for &2{reason}&7."
+        - "&a"
+        - "&8---------------------------------------------------------"
+    temporary:
+      message:
+        - "&8---------------------------------------------------------"
+        - "&a"
+        - "&8[&2Silent&8] &a{punishee} &7has been temporarily ip-banned by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
+        - "&a"
+        - "&8---------------------------------------------------------"
+  mute:
+    message:
+      permanent:
+        message:
+          - "&8--------------------------------------------------------"
+          - "&a"
+          - "&7You have been permanently muted on this server."
+          - "&aReason&8: &7{reason}"
+          - "&a"
+          - "&8--------------------------------------------------------"
+      temporary:
+        message:
+          - "&8--------------------------------------------------------"
+          - "&a"
+          - "&7You have been temporarily muted on this server."
+          - "&aReason&8: &7{reason}"
+          - "&aTime Remaining&8: &7{reason}"
+          - "&a"
+          - "&8--------------------------------------------------------"
+    silent:
+      permanent:
+        message: "&8[&2Silent&8] &a{punishee} &7has been permanently muted by &c{punisher} &7for &2{reason}&7."
+      temporary:
+        message: "&8[&2Silent&8] &a{punishee} &7has been temporarily muted by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
+    permanent:
+      message:
+        - "&8---------------------------------------------------------"
+        - "&a"
+        - "&a{punishee} &7has been permanently muted by &c{punisher} &7for &2{reason}&7."
+        - "&a"
+        - "&8---------------------------------------------------------"
+    temporary:
+      message:
+        - "&8---------------------------------------------------------"
+        - "&a"
+        - "&8[&2Silent&8] &a{punishee} &7has been temporarily muted by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
+        - "&a"
+        - "&8---------------------------------------------------------"
+    # finish mute section
