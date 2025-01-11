@@ -6,6 +6,7 @@ import cloud.nextflow.nexusban.managers.config.ConfigManager;
 import cloud.nextflow.nexusban.managers.database.DatabaseManager;
 import cloud.nextflow.nexusban.managers.listeners.ListenerManager;
 import cloud.nextflow.nexusban.managers.messages.MessageManager;
+import cloud.nextflow.nexusban.managers.players.PlayerManager;
 import cloud.nextflow.nexusban.managers.types.NexusManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,12 +27,19 @@ public final class NexusBan extends JavaPlugin {
         CommandManager commandManager = new CommandManager(this);
         ConfigManager configManager = new ConfigManager(this);
         MessageManager messageManager = new MessageManager(this);
+        PlayerManager playerManager = new PlayerManager(this);
 
         earlyNexusManagers = new NexusManager[]{configManager, messageManager};
-        nexusManagers = new NexusManager[]{listenerManager, commandManager};
+        nexusManagers = new NexusManager[]{listenerManager, commandManager, playerManager};
         // Plugin startup logic
         saveDefaultConfig();
         loadManagers(earlyNexusManagers, nexusManagers);
+        if (nexusBan.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (configManager.getVerboseMode()) {
+                getLogger().info("PlaceholderAPI detected...");
+                getLogger().info("Integrated into PlaceHolderAPI");
+            }
+        }
         getLogger().info("NexusBan has been enabled!");
     }
 

@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MessageManager extends NexusManager {
@@ -35,6 +37,14 @@ public class MessageManager extends NexusManager {
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("prefix")))
                 + " " + loadMessage(player, configName, params);
     }
+
+//    public String loadMessages(Player player, String configName, String... params) {
+//        List<String> messagesRaw = Objects.requireNonNull(config.getStringList(configName));
+//        List<String> messages = new ArrayList<>();
+//        for (String message : messagesRaw) {
+//            messages.add(loadMessage())
+//        }
+//    }
 
     @Override
     public void register() throws ManagerException {

@@ -162,10 +162,33 @@ permissions:
   nexusban.command.history:
     description: Permission to find the history of someone
     default: op
+  # immune parent level permissions
+  nexusban.immune.*:
+    description: Permission to be immune to all moderation actions
+    default: op
+    children:
+      nexusban.immune.ipban: true
+      nexusban.immune.ban: true
+      nexusban.immune.kick: true
+      nexusban.immune.mute: true
+      nexusban.immune.warn: true
+  # immune children level permissions
+  nexusban.immune.ipban:
+    description: Permission to be immune to the ip-ban command
+    default: op
+  nexusban.immune.ban:
+    description: Permission to be immune to the ban command
+    default: op
+  nexusban.immune.kick:
+    description: Permission to be immune to the kick command
+    default: op
+  nexusban.immune.mute:
+    description: Permission to be immune to the mute command
+    default: op
+  nexusban.immune.warn:
+    description: Permission to be immune to the warn command
+    default: op
   # nexusban children level permissions
   nexusban.test:
     description: Permission to use test command
-    default: op
-  nexusban.immune:
-    description: Permission to be immune to all moderation actions
     default: op

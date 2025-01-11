@@ -59,7 +59,7 @@ public abstract class NexusCommand implements TabExecutor {
     public abstract boolean onRun(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
 
     @Override
-    public abstract @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings);
+    public abstract @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
 
     public NexusBan getNexusBan() {
         return nexusBan;

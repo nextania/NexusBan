@@ -10,22 +10,32 @@ public class Punishment {
     private long endDate;
     private String time;
     private boolean permanent;
+    private boolean silent;
 
-    public Punishment(PunishmentType punishmentType, String caseID, String punishedUUID, String punisherUUID, String reason, long startDate, long endDate, String time) {
-        this(punishmentType, caseID, punishedUUID, punisherUUID, reason, startDate);
+    public Punishment(PunishmentType punishmentType, String caseID, String punishedUUID, String punisherUUID, String reason, long startDate, long endDate, String time, boolean silent) {
+        this(punishmentType, caseID, punishedUUID, punisherUUID, reason, startDate, silent);
         this.endDate = endDate;
         this.time = time;
         this.permanent = false;
     }
     
-    public Punishment(PunishmentType punishmentType, String caseID, String punishedUUID, String punisherUUID, String reason, long startDate) {
+    public Punishment(PunishmentType punishmentType, String caseID, String punishedUUID, String punisherUUID, String reason, long startDate, boolean silent) {
         this.punishmentType = punishmentType;
         this.caseID = caseID;
         this.punishedUUID = punishedUUID;
         this.punisherUUID = punisherUUID;
         this.reason = reason;
         this.startDate = startDate;
+        this.silent = silent;
         this.permanent = true;
+    }
+
+    public boolean getSilent() {
+        return silent;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
     }
 
     public String getCaseID() {

@@ -1,3 +1,11 @@
 prefix: "&8[&4&lNexus&f&lBan&8]"
 chat:
   no-permission: "&cUnfortunately, you do not have permission to run this command!"
+  ban:
+    silent:
+      permanent: "&8[&2Silent&8] &a$1 &7has been permanently banned by &c$2 &7for &2$3&7."
+      temporary: "&8[&2Silent&8] &a$1 &7has been temporarily banned by &c$2 &7for &4$3 &7because of &2$4&7."
+    permanent:
+      -
+    temporary:
+      -
