@@ -26,6 +26,8 @@ public class Punishment {
         this.punisherUUID = punisherUUID;
         this.reason = reason;
         this.startDate = startDate;
+        this.endDate = 0;
+        this.time = "";
         this.silent = silent;
         this.permanent = true;
     }

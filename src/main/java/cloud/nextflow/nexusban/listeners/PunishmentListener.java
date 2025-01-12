@@ -5,6 +5,7 @@ import cloud.nextflow.nexusban.events.PunishmentEvent;
 import cloud.nextflow.nexusban.listeners.types.NexusListener;
 import cloud.nextflow.nexusban.managers.messages.MessageManager;
 import cloud.nextflow.nexusban.managers.players.PlayerManager;
+import cloud.nextflow.nexusban.managers.punishments.PunishmentManager;
 import cloud.nextflow.nexusban.types.Punishment;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -13,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,7 @@ public class PunishmentListener extends NexusListener {
             default:
                 break;
         }
+        PunishmentManager.addPunishment(punishment);
         nexusBan.getLogger().info("Punishment event has been called!");
     }
 
@@ -77,6 +80,22 @@ public class PunishmentListener extends NexusListener {
                     "chat.mute." + (punishment.isPermanent() ? "permanent" : "temporary") + ".message",
                     messageParams);
             messageManager.broadcastMessageList(messages);
+        }
+        Map<String, String> params = new HashMap<>();
+        params.put("reason", punishment.getReason());
+        Player punisher = Bukkit.getPlayer(punishment.getPunisherUUID());
+        if (punishment.isPermanent()) {
+            List<String> messages = messageManager.loadMessages(punisher, "chat.mute.message.permanent.message", params);
+            for (String message : messages) {
+                punisher.sendMessage(message);
+            }
+        } else {
+            if (punishment.getEndDate() > Instant.now().toEpochMilli()) return;
+            params.put("time-remaining", "");
+            List<String> messages = messageManager.loadMessages(punisher, "chat.mute.message.temporary.message", params);
+            for (String message : messages) {
+                punisher.sendMessage(message);
+            }
         }
     }
 

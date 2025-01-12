@@ -42,7 +42,6 @@ public final class NexusBan extends JavaPlugin {
                 getLogger().info("Integrated into PlaceHolderAPI");
             }
         }
-        this.loadPunishments();
         getLogger().info("NexusBan has been enabled!");
     }
 
@@ -70,10 +69,6 @@ public final class NexusBan extends JavaPlugin {
             return;
         }
         getLogger().info("Loaded the " + managerName + "!");
-    }
-
-    private void loadPunishments() {
-
     }
 
     @Override

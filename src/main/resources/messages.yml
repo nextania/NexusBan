@@ -1,6 +1,9 @@
 prefix: "&8[&4&lNexus&f&lBan&8]"
 chat:
   no-permission: "&cUnfortunately, you do not have permission to run this command!"
+  number-args: "&cYou don't have enough arguments for this command, the usage for the command is: &a{usage}"
+  player-not-found: "&a{player} &cwas not found in the server or in the player cache."
+  database-error: "&cThere was a database error, and it has been logged to the console!"
   ban:
     silent:
       permanent:
@@ -57,7 +60,7 @@ chat:
           - "&a"
           - "&7You have been temporarily muted on this server."
           - "&aReason&8: &7{reason}"
-          - "&aTime Remaining&8: &7{reason}"
+          - "&aTime Remaining&8: &7{time-remaining}"
           - "&a"
           - "&8--------------------------------------------------------"
     silent:
