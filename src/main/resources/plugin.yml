@@ -13,6 +13,12 @@ commands:
     description: 'A command to test'
     permission: nexusban.test
     usage: /test <ing>
+  mute:
+    aliases:
+      - mt
+    description: 'A command to mute a player permanently'
+    permission: nexusban.command.mute
+    usage: /mute <player> <reason>
 permissions:
   # root parent level permissions
   nexusban.*:

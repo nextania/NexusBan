@@ -26,7 +26,7 @@ import java.util.logging.Level;
 public class MuteCommand extends NexusCommand {
     public MuteCommand(MessageManager messageManager, ConfigManager configManager) {
         super(messageManager, configManager, "mute", "command to mute someone permanently",
-                "/mute <person> <reason>", "nexusban.mute");
+                "/mute <person> <reason>", "nexusban.command.mute");
 
     }
 
@@ -58,7 +58,7 @@ public class MuteCommand extends NexusCommand {
                 punisher.sendMessage(messageManager.loadMessage(punisher, "chat.player-not-found", params));
                 return false;
             }
-            String reason = String.join("", Arrays.copyOfRange(args, silent ? 3 : 2, args.length));
+            String reason = String.join("", Arrays.copyOfRange(args, (silent ? 2 : 1), args.length));
             String caseID = "";
             long startDate = Instant.now().toEpochMilli();
             try {
@@ -75,7 +75,7 @@ public class MuteCommand extends NexusCommand {
         } else {
             return false;
         }
-        return false;
+        return true;
     }
 
     @Override

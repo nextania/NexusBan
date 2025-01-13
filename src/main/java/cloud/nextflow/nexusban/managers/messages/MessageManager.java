@@ -44,6 +44,13 @@ public class MessageManager extends NexusManager {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public String loadMessage(Player player, String configName) {
+        String message = Objects.requireNonNull(config.getString(configName));
+        message = replaceOccurrence(message, new HashMap<>());
+        message = replacePAPI(player, message);
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
     public String replaceString(Player player, String message, Map<String, String> params) {
         message = replaceOccurrence(message, params);
         message = replacePAPI(player, message);
@@ -53,6 +60,11 @@ public class MessageManager extends NexusManager {
     public String loadMessagePrefix(Player player, String configName, Map<String, String> params) {
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("prefix")))
                 + " " + loadMessage(player, configName, params);
+    }
+
+    public String loadMessagePrefix(Player player, String configName) {
+        return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("prefix")))
+                + " " + loadMessage(player, configName, new HashMap<>());
     }
 
     private String replaceOccurrence(String main, Map<String, String> toReplace) {

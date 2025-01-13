@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TestCommand extends NexusCommand {
     public TestCommand(MessageManager messageManager, ConfigManager configManager) {
-        super(messageManager, configManager, "test", "A command to test nexus ban", "/test", "nexusban.test");
+        super(messageManager, configManager, "test", "A command to test nexus ban", "/test", "nexusban.command.test");
     }
 
     @Override

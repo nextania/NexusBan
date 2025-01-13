@@ -33,14 +33,14 @@ public class ConfigManager extends NexusManager {
         return databaseType;
     }
 
-    public H2 getH2Config() throws DatabaseConfigException {
+    public H2 getH2Config(String dataFolder) throws DatabaseConfigException {
         String filename = nexusBan.getConfig().getString("h2.file");
         if (filename == null || filename.isBlank()) throw new DatabaseConfigException("H2 filepath not defined in config");
         String username = nexusBan.getConfig().getString("h2.username");
         if (username == null || username.isBlank()) throw new DatabaseConfigException("H2 username not defined in config");
         String password = nexusBan.getConfig().getString("h2.password");
         if (password == null || password.isBlank()) throw new DatabaseConfigException("H2 password not defined in config");
-        return new H2(filename, username, password);
+        return new H2(dataFolder + "/" + filename, username, password);
     }
 
     public MariaDB getMariaDBConfig() throws DatabaseConfigException {

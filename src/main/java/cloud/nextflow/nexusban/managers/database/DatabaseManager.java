@@ -37,7 +37,7 @@ public class DatabaseManager extends NexusManager {
         try {
             switch (databaseType) {
                 case H2 -> {
-                    H2 h2 = configManager.getH2Config();
+                    H2 h2 = configManager.getH2Config(nexusBan.getDataFolder().toString());
                     SQLConnector sqlConnector;
                     try {
                         sqlConnector = DatabaseAPI.getHikariCP(h2, nexusBan.getLogger());

@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class PunishmentListener extends NexusListener {
     private final MessageManager messageManager;
@@ -33,8 +34,9 @@ public class PunishmentListener extends NexusListener {
         List<Player> staffList = PlayerManager.getPlayerManager().findStaff(punishment.getPunishmentType());
         Map<String, String> messageParams = new HashMap<>();
         Map<String, String> hoverParams = new HashMap<>();
-        Player punishedPlayer = Bukkit.getPlayer(punishment.getPunishedUUID());
-        Player punisherPlayer = Bukkit.getPlayer(punishment.getPunisherUUID());
+        nexusBan.getLogger().info("UUID of punished player" + punishment.getPunishedUUID());
+        Player punishedPlayer = Bukkit.getPlayer(UUID.fromString(punishment.getPunishedUUID()));
+        Player punisherPlayer = Bukkit.getPlayer(UUID.fromString(punishment.getPunisherUUID()));
         messageParams.put("reason", punishment.getReason());
         messageParams.put("punishee", punishedPlayer.getName());
         messageParams.put("punisher", punisherPlayer.getName());
@@ -83,18 +85,18 @@ public class PunishmentListener extends NexusListener {
         }
         Map<String, String> params = new HashMap<>();
         params.put("reason", punishment.getReason());
-        Player punisher = Bukkit.getPlayer(punishment.getPunisherUUID());
+        Player punisher = Bukkit.getPlayer(UUID.fromString(punishment.getPunisherUUID()));
         if (punishment.isPermanent()) {
             List<String> messages = messageManager.loadMessages(punisher, "chat.mute.message.permanent.message", params);
             for (String message : messages) {
-                punisher.sendMessage(message);
+                punishedPlayer.sendMessage(message);
             }
         } else {
             if (punishment.getEndDate() > Instant.now().toEpochMilli()) return;
             params.put("time-remaining", "");
             List<String> messages = messageManager.loadMessages(punisher, "chat.mute.message.temporary.message", params);
             for (String message : messages) {
-                punisher.sendMessage(message);
+                punishedPlayer.sendMessage(message);
             }
         }
     }

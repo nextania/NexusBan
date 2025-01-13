@@ -33,9 +33,9 @@ public class PlayerListener extends NexusListener {
         Punishment punishment = PunishmentManager.findPunishment(player.getUniqueId().toString(),
                 PunishmentType.MUTE);
         MessageManager messageManager = MessageManager.getMessageManager();
+        if (punishment == null) return;
         Map<String, String> params = new HashMap<>();
         params.put("reason", punishment.getReason());
-        if (punishment == null) return;
         if (punishment.isPermanent()) {
             event.setCancelled(true);
             List<String> messages = messageManager.loadMessages(player, "chat.mute.message.permanent.message", params);
