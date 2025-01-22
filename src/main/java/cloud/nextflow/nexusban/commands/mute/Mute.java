@@ -17,10 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public class MuteCommand extends NexusCommand {
@@ -79,7 +76,22 @@ public class MuteCommand extends NexusCommand {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return List.of();
+    public @Nullable List<String> onTab(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        List<String> arguments = new ArrayList<>();
+        if (args.length == 1) {
+            arguments.add("-s");
+            Bukkit.getOnlinePlayers().forEach(player -> arguments.add(player.getName()));
+        } else if (args.length == 2) {
+            if (args[0].equals("-s")) {
+                Bukkit.getOnlinePlayers().forEach(player -> arguments.add(player.getName()));
+            } else {
+                arguments.add("Reason");
+            }
+        } else if (args.length == 3) {
+            if (args[0].equals("-s")) {
+                arguments.add("Reason");
+            }
+        }
+        return arguments;
     }
 }
