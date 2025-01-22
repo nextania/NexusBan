@@ -1,4 +1,7 @@
 package cloud.nextflow.nexusban.commands.ban;
 
-public class Unban {
+import cloud.nextflow.nexusban.commands.type.NexusCommand;
+
+public class Unban extends NexusCommand {
+
 }

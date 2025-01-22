@@ -10,7 +10,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class NexusCommand implements TabExecutor {
     private final String name;
@@ -42,13 +44,15 @@ public abstract class NexusCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!validateUsage(commandSender, command, label, args)) {
+            Map<String, String> params = new HashMap<>();
+            params.put("usage", getUsage());
+            commandSender.sendMessage(messageManager.loadMessage(null, "chat.number-args", params));
+            return false;
+        }
         if (!permission.isBlank()) {
             if (!commandSender.hasPermission(permission)) {
-                if (commandSender instanceof Player) {
-                    commandSender.sendMessage(messageManager.loadMessagePrefix(((Player) commandSender), "chat.no-permission"));
-                } else {
-                    commandSender.sendMessage(messageManager.loadMessagePrefix(null, "chat.no-permission"));
-                }
+                commandSender.sendMessage(messageManager.loadMessagePrefix(null, "chat.no-permission"));
                 return false;
             }
         }
@@ -56,10 +60,26 @@ public abstract class NexusCommand implements TabExecutor {
         return onRun(commandSender, command, label, args);
     }
 
+    protected boolean validatePlayerExists(String playerName, Player punisher, Player punished) {
+        if (punished == null) {
+            Map<String, String> params = new HashMap<>();
+            params.put("player", playerName);
+            punisher.sendMessage(messageManager.loadMessagePrefix(null, "chat.player-not-found", params));
+            return false;
+        }
+        return true;
+    }
+
+    public abstract boolean validateUsage(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
+
     public abstract boolean onRun(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
 
+    public abstract @Nullable List<String> onTab(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
+
     @Override
-    public abstract @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return onTab(commandSender, command, label, args);
+    }
 
     public NexusBan getNexusBan() {
         return nexusBan;

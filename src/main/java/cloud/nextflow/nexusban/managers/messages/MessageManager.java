@@ -37,6 +37,12 @@ public class MessageManager extends NexusManager {
         return messages;
     }
 
+    public List<String> loadMessages(String configName, Map<String, String> params) {
+        List<String> messages = Objects.requireNonNull(config.getStringList(configName));
+        messages.replaceAll(message -> replaceString(message, params));
+        return messages;
+    }
+
     public String loadMessage(Player player, String configName, Map<String, String> params) {
         String message = Objects.requireNonNull(config.getString(configName));
         message = replaceOccurrence(message, params);
@@ -54,6 +60,11 @@ public class MessageManager extends NexusManager {
     public String replaceString(Player player, String message, Map<String, String> params) {
         message = replaceOccurrence(message, params);
         message = replacePAPI(player, message);
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public String replaceString(String message, Map<String, String> params) {
+        message = replaceOccurrence(message, params);
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 

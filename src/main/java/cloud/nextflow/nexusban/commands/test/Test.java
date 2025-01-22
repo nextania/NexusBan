@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TestCommand extends NexusCommand {
-    public TestCommand(MessageManager messageManager, ConfigManager configManager) {
+public class Test extends NexusCommand {
+    public Test(MessageManager messageManager, ConfigManager configManager) {
         super(messageManager, configManager, "test", "A command to test nexus ban", "/test", "nexusban.command.test");
     }
 

@@ -103,7 +103,8 @@ public class SQLConnector extends DBConnector {
                     "CREATE TABLE IF NOT EXISTS punishments (" +
                             "punishmentType TEXT, caseID TEXT, punishedUUID TEXT, punisherUUID TEXT," +
                             "reason LONGTEXT, startDate TIMESTAMP, endDate TIMESTAMP, permanent BOOLEAN, duration TEXT);"
-                    + "CREATE TABLE IF NOT EXISTS players (playerName LONGTEXT, uuid MEDIUMTEXT)");
+                    + "CREATE TABLE IF NOT EXISTS players (playerName LONGTEXT, uuid MEDIUMTEXT);" +
+                            "CREATE TABLE IF NOT EXISTS punishmentsIP (ip MEDIUMTEXT, ipID MEDIUMTEXT)");
             preparedStatement.executeUpdate();
         } catch (SQLException exception) {
             throw new DatabaseException("Error initializing the database", exception);

@@ -1,9 +1,9 @@
 package cloud.nextflow.nexusban.managers.commands;
 
 import cloud.nextflow.nexusban.NexusBan;
-import cloud.nextflow.nexusban.commands.ban.BanCommand;
-import cloud.nextflow.nexusban.commands.mute.MuteCommand;
-import cloud.nextflow.nexusban.commands.test.TestCommand;
+import cloud.nextflow.nexusban.commands.ban.Ban;
+import cloud.nextflow.nexusban.commands.mute.Mute;
+import cloud.nextflow.nexusban.commands.test.Test;
 import cloud.nextflow.nexusban.commands.type.NexusCommand;
 import cloud.nextflow.nexusban.exceptions.ManagerException;
 import cloud.nextflow.nexusban.managers.config.ConfigManager;
@@ -28,8 +28,9 @@ public class CommandManager extends NexusManager {
         configManager = ConfigManager.getConfigManager();
 
         //add all commands
-        nexusCommands.add(new TestCommand(messageManager, configManager));
-        nexusCommands.add(new MuteCommand(messageManager, configManager));
+        nexusCommands.add(new Test(messageManager, configManager));
+        nexusCommands.add(new Mute(messageManager, configManager));
+        nexusCommands.add(new Ban(messageManager, configManager));
     }
 
     @Override

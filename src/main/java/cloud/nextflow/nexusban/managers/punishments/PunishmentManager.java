@@ -13,6 +13,7 @@ import java.util.*;
 
 public class PunishmentManager extends NexusManager {
     private static Map<String, String> playerCache = new HashMap<>();
+    private static Map<String, String> ipCache = new HashMap<>();
     private static Map<Boolean, Punishment> punishmentCache = new HashMap<>();
     private static DBUtils dbUtils;
 
@@ -35,6 +36,7 @@ public class PunishmentManager extends NexusManager {
             for (Punishment punishment : dbUtils.getAllPunishments(true)) {
                 punishmentCache.put(true, punishment);
             }
+            ipCache = dbUtils.getAllPunishmentsIP();
         } catch (DatabaseException exception) {
             throw new ManagerException("An issue with the database occurred", exception);
         }
@@ -42,6 +44,23 @@ public class PunishmentManager extends NexusManager {
 
     public static void addPunishment(Punishment punishment) {
         punishmentCache.put(punishment.isPermanent(), punishment);
+    }
+
+    public static void addPunishment(String ip, Punishment punishment) {
+        if (findPunishment(punishment.getCaseID()) == null) addPunishment(punishment);
+        if (punishment.getPunishmentType() != PunishmentType.IPBAN) return;
+        ipCache.put(ip, punishment.getCaseID());
+    }
+
+    public static void addPunishment(String ip, String caseID) {
+        if (findPunishment(caseID) == null) return;
+        ipCache.put(ip, caseID);
+    }
+
+    public static Punishment findIpPunishment(String ip) {
+        String caseID = ipCache.get(ip);
+        if (caseID == null || caseID.isBlank()) return null;
+        return findPunishment(caseID);
     }
 
     public static Punishment findPunishment(String caseID) {

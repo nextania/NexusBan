@@ -6,13 +6,16 @@ import cloud.nextflow.nexusban.listeners.types.NexusListener;
 import cloud.nextflow.nexusban.managers.messages.MessageManager;
 import cloud.nextflow.nexusban.managers.players.PlayerManager;
 import cloud.nextflow.nexusban.managers.punishments.PunishmentManager;
+import cloud.nextflow.nexusban.managers.time.TimeManager;
 import cloud.nextflow.nexusban.types.Punishment;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -21,11 +24,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PunishmentListener extends NexusListener {
-    private final MessageManager messageManager;
-
     public PunishmentListener(NexusBan nexusBan) {
         super(nexusBan);
-        this.messageManager = MessageManager.getMessageManager();
     }
 
     @EventHandler
@@ -34,7 +34,6 @@ public class PunishmentListener extends NexusListener {
         List<Player> staffList = PlayerManager.getPlayerManager().findStaff(punishment.getPunishmentType());
         Map<String, String> messageParams = new HashMap<>();
         Map<String, String> hoverParams = new HashMap<>();
-        nexusBan.getLogger().info("UUID of punished player" + punishment.getPunishedUUID());
         Player punishedPlayer = Bukkit.getPlayer(UUID.fromString(punishment.getPunishedUUID()));
         Player punisherPlayer = Bukkit.getPlayer(UUID.fromString(punishment.getPunisherUUID()));
         messageParams.put("reason", punishment.getReason());
@@ -42,10 +41,10 @@ public class PunishmentListener extends NexusListener {
         messageParams.put("punisher", punisherPlayer.getName());
         switch (punishment.getPunishmentType()) {
             case IPBAN:
-                onBan(punishment, staffList, messageParams, punishedPlayer, true);
+                onBan(punishment, staffList, messageParams, punisherPlayer, punishedPlayer, true);
                 break;
             case BAN:
-                onBan(punishment, staffList, messageParams, punishedPlayer, false);
+                onBan(punishment, staffList, messageParams, punisherPlayer, punishedPlayer, false);
                 break;
 //            case KICK:
 //                onKick(punishment, staffList, messageParams, punishedPlayer);
@@ -101,7 +100,7 @@ public class PunishmentListener extends NexusListener {
         }
     }
 
-    public void onBan(Punishment punishment, List<Player> staffList, Map<String, String> messageParams, Player punishedPlayer, boolean ip) {
+    public void onBan(Punishment punishment, List<Player> staffList, Map<String, String> messageParams, Player punisherPlayer, Player punishedPlayer, boolean ip) {
         TextComponent textComponent = new TextComponent();
         String banType = ip ? "ipban" : "ban";
         if (punishment.getSilent()) {
@@ -121,6 +120,19 @@ public class PunishmentListener extends NexusListener {
                     "chat." + banType + "." + (punishment.isPermanent() ? "permanent" : "temporary") + ".message",
                     messageParams);
             messageManager.broadcastMessageList(messages);
+        }
+        Instant startDate = Instant.ofEpochMilli(punishment.getStartDate());
+        Map<String, String> params = new HashMap<>();
+        params.put("id", punishment.getCaseID());
+        params.put("reason", punishment.getReason());
+        params.put("punisher", punisherPlayer.getName());
+        params.put("date", TimeManager.convertToDateTime(startDate));
+        if (punishment.isPermanent()) {
+            punishedPlayer.kickPlayer(String.join("\n", messageManager.loadMessages("kick.ban.permanent", params)));
+        } else {
+            Instant endDate = Instant.ofEpochMilli(punishment.getEndDate());
+            params.put("remaining", TimeManager.timeRemaining(startDate, endDate));
+            punishedPlayer.kickPlayer(String.join("\n", messageManager.loadMessages("kick.ban.temporary", params)));
         }
     }
 }

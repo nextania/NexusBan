@@ -1,4 +1,24 @@
 prefix: "&8[&4&lNexus&f&lBan&8]"
+kick:
+  ban:
+    permanent:
+      - "&cYou are banned from this server!"
+      - "&a"
+      - "&7Banned on: &a{date}"
+      - "&7Banned by: &a{punisher}"
+      - "&7Reason: &a{reason}"
+      - "&7Case ID: &a{id}"
+      - "&a"
+      - "&7You are permanently banned!"
+    temporary:
+      - "&cYou are banned from this server!"
+      - "&a"
+      - "&7Banned on: &a{date}"
+      - "&7Banned by: &a{punisher}"
+      - "&7Reason: &a{reason}"
+      - "&7Case ID: &a{id}"
+      - "&a"
+      - "&7Ban expires in: &a{time}"
 chat:
   no-permission: "&cUnfortunately, you do not have permission to run this command!"
   number-args: "&cYou don't have enough arguments for this command, the usage for the command is: &a{usage}"
@@ -12,18 +32,18 @@ chat:
         message: "&8[&2Silent&8] &a{punishee} &7has been temporarily banned by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
     permanent:
       message:
-        - "&8------------------------------------------------------"
+        - "&8-----------------------------------------------------"
         - "&a"
         - "&a{punishee} &7has been permanently banned by &c{punisher} &7for &2{reason}&7."
         - "&a"
-        - "&8------------------------------------------------------"
+        - "&8-----------------------------------------------------"
     temporary:
       message:
-        - "&8------------------------------------------------------"
+        - "&8-----------------------------------------------------"
         - "&a"
         - "&8[&2Silent&8] &a{punishee} &7has been temporarily banned by &c{punisher} &7for &4{time} &7because of &2{reason}&7."
         - "&a"
-        - "&8------------------------------------------------------"
+        - "&8-----------------------------------------------------"
   ipban:
     silent:
       permanent:
@@ -52,6 +72,7 @@ chat:
           - "&a"
           - "&7You have been permanently muted on this server."
           - "&aReason&8: &7{reason}"
+          - "&aCase ID&8: &7{id}"
           - "&a"
           - "&8------------------------------------------------------"
       temporary:
@@ -60,7 +81,8 @@ chat:
           - "&a"
           - "&7You have been temporarily muted on this server."
           - "&aReason&8: &7{reason}"
-          - "&aTime Remaining&8: &7{time-remaining}"
+          - "&aTime Remaining&8: &7{remaining}"
+          - "&aCase ID&8: &7{id}"
           - "&a"
           - "&8------------------------------------------------------"
     silent:

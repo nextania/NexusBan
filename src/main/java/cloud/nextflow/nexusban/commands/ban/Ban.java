@@ -18,41 +18,32 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
-public class BanCommand extends NexusCommand {
-    public BanCommand(MessageManager messageManager, ConfigManager configManager) {
+public class Ban extends NexusCommand {
+    public Ban(MessageManager messageManager, ConfigManager configManager) {
         super(messageManager, configManager, "ban", "command to ban someone", "/ban <player> <reason>", "nexusban.command.ban");
+    }
+
+    @Override
+    public boolean validateUsage(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length < 1) return false;
+        boolean silent = args[0].equals("-s");
+        if (silent) {
+            return args.length >= 2;
+        }
+        return true;
     }
 
     public boolean onRun(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // to properly unban an offline player by name instead of UUID, don't unban them by their name, but
         // instead unban them when they log back on and check if the UUID matches the original to make sure
         if (commandSender instanceof Player punisher) {
-            if (args.length < 1) {
-                Map<String, String> params = new HashMap<>();
-                params.put("usage", getUsage());
-                commandSender.sendMessage(messageManager.loadMessage(punisher, "chat.number-args", params));
-                return false;
-            }
             Player punished;
             boolean silent = args[0].equals("-s");
             if (silent) {
-                if (args.length < 2) {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("usage", getUsage());
-                    commandSender.sendMessage(messageManager.loadMessage(punisher, "chat.number-args", params));
-                    return false;
-                }
                 punished = Bukkit.getPlayerExact(args[1]);
             } else {
                 punished = Bukkit.getPlayerExact(args[0]);
-            }
-            if (punished == null) {
-                Map<String, String> params = new HashMap<>();
-                params.put("player", args[0]);
-                punisher.sendMessage(messageManager.loadMessage(punisher, "chat.player-not-found", params));
-                return false;
             }
             String reason = String.join("", Arrays.copyOfRange(args, (silent ? 2 : 1), args.length));
             String caseID = "";

@@ -10,14 +10,16 @@ import cloud.nextflow.nexusban.types.PunishmentType;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
+import org.bson.BsonType;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DBUtils {
     private MongoConnector mongoConnector;
@@ -89,6 +91,149 @@ public class DBUtils {
             }
         }
 
+        return caseID;
+    }
+
+    public String createPunishment(PunishmentType punishmentType, String punishedUUID, String punisherUUID, String reason, long startDate, long endDate, String duration, boolean permanent, String ip) throws DatabaseException {
+        Punishment toFindPunishment = findPunishment(punishedUUID, punishmentType);
+        if (toFindPunishment != null) {
+            if (toFindPunishment.isPermanent()) throw new DatabaseException("There already exists a permanent " +
+                    punishmentType.name() + " for the user!");
+            if (toFindPunishment.getEndDate() > toFindPunishment.getStartDate()) {
+                throw new DatabaseException("There already exists a temporary " +
+                        punishmentType.name() + " for the user!");
+            } else {
+                deletePunishment(toFindPunishment.getCaseID());
+            }
+        }
+        String caseID = generateCaseID(12);
+        if (type == ConnectorType.MONGO) {
+            Document punishmentDocument = new Document()
+                    .append("punishmentType", punishmentType.name())
+                    .append("caseID", caseID)
+                    .append("punishedUUID", punishedUUID)
+                    .append("punisherUUID", punisherUUID)
+                    .append("reason", reason)
+                    .append("startDate", startDate)
+                    .append("endDate", endDate)
+                    .append("permanent", permanent)
+                    .append("duration", duration);
+            mongoConnector.getCollection().insertOne(punishmentDocument);
+            if (punishmentType == PunishmentType.IPBAN) {
+                Document ipDocument = new Document()
+                        .append("ipID", caseID)
+                        .append("ip", ip);
+                mongoConnector.getCollection().insertOne(ipDocument);
+            }
+        } else if (type == ConnectorType.SQL) {
+            Connection connection = null;
+            PreparedStatement preparedStatement = null;
+
+            try {
+                connection = sqlConnector.getHikariCP().getConnection();
+
+                preparedStatement = connection.prepareStatement("INSERT INTO punishments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                preparedStatement.setString(1, punishmentType.name());
+                preparedStatement.setString(2, caseID);
+                preparedStatement.setString(3, punishedUUID);
+                preparedStatement.setString(4, punisherUUID);
+                preparedStatement.setString(5, reason);
+                preparedStatement.setTimestamp(6, Timestamp.from(Instant.ofEpochMilli(startDate)));
+                preparedStatement.setTimestamp(7, Timestamp.from(Instant.ofEpochMilli(endDate)));
+                preparedStatement.setBoolean(8, permanent);
+                preparedStatement.setString(9, duration);
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException exception) {
+                throw new DatabaseException("Error with inserting punishments in SQL", exception);
+            } finally {
+                sqlConnector.closeConnections(preparedStatement, connection, null);
+            }
+
+            connection = null;
+            preparedStatement = null;
+
+            try {
+                connection = sqlConnector.getHikariCP().getConnection();
+
+                preparedStatement = connection.prepareStatement("INSERT INTO punishmentsIP VALUES (?, ?)");
+                preparedStatement.setString(1, ip);
+                preparedStatement.setString(2, caseID);
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException exception) {
+                throw new DatabaseException("Error with inserting ip in SQL", exception);
+            } finally {
+                sqlConnector.closeConnections(preparedStatement, connection, null);
+            }
+        }
+
+        return caseID;
+    }
+
+    public Punishment findIpPunishment(String ip) throws DatabaseException {
+        String caseID = "";
+        if (type == ConnectorType.MONGO) {
+            Document document = new Document()
+                    .append("ip", ip);
+            Document foundPunishment = mongoConnector.getCollection().find(document).first();
+            if (foundPunishment == null) return null;
+            caseID = foundPunishment.getString("ipID");
+        } else if (type == ConnectorType.SQL) {
+            Connection connection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+
+            try {
+                connection = sqlConnector.getHikariCP().getConnection();
+
+                preparedStatement = connection.prepareStatement("SELECT * FROM punishmentsIP WHERE ip = ?");
+                preparedStatement.setString(1, ip);
+
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    caseID = resultSet.getString("ipID");
+                }
+            } catch (SQLException exception) {
+                throw new DatabaseException("Error with finding punishment in SQL", exception);
+            } finally {
+                sqlConnector.closeConnections(preparedStatement, connection, resultSet);
+            }
+        }
+        return findPunishment(caseID);
+    }
+
+    public String findIpIDPunishment(String ip) throws DatabaseException {
+        String caseID = "";
+        if (type == ConnectorType.MONGO) {
+            Document document = new Document()
+                    .append("ip", ip);
+            Document foundPunishment = mongoConnector.getCollection().find(document).first();
+            if (foundPunishment == null) return null;
+            caseID = foundPunishment.getString("ipID");
+        } else if (type == ConnectorType.SQL) {
+            Connection connection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+
+            try {
+                connection = sqlConnector.getHikariCP().getConnection();
+
+                preparedStatement = connection.prepareStatement("SELECT * FROM punishmentsIP WHERE ip = ?");
+                preparedStatement.setString(1, ip);
+
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    caseID = resultSet.getString("ipID");
+                }
+            } catch (SQLException exception) {
+                throw new DatabaseException("Error with finding punishment in SQL", exception);
+            } finally {
+                sqlConnector.closeConnections(preparedStatement, connection, resultSet);
+            }
+        }
         return caseID;
     }
 
@@ -486,6 +631,41 @@ public class DBUtils {
             }
         }
         return punishmentList;
+    }
+
+    public Map<String, String> getAllPunishmentsIP() throws DatabaseException {
+        Map<String, String> ipCases = new HashMap<>();
+
+        if (type == ConnectorType.MONGO) {
+            Bson findCondition = Filters.type("ip", BsonType.STRING);
+            try (MongoCursor<Document> mongoCursor = mongoConnector.getCollection().find(findCondition).cursor()) {
+                while (mongoCursor.hasNext()) {
+                    Document result = mongoCursor.next();
+                    ipCases.put(result.getString("ip"), result.getString("ipID"));
+                }
+            }
+
+        } else if (type == ConnectorType.SQL) {
+            Connection connection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+
+            try {
+                connection = sqlConnector.getHikariCP().getConnection();
+
+                preparedStatement = connection.prepareStatement("SELECT * FROM punishmentsIP");
+
+                resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    ipCases.put(resultSet.getString("ip"), resultSet.getString("ipID"));
+                }
+            } catch (SQLException exception) {
+                throw new DatabaseException("Could not find all punishments in SQL", exception);
+            } finally {
+                sqlConnector.closeConnections(preparedStatement, connection, resultSet);
+            }
+        }
+        return ipCases;
     }
 
     public void deleteExpiredPunishments() throws DatabaseException {

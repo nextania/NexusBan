@@ -19,6 +19,10 @@ commands:
     description: 'A command to mute a player permanently'
     permission: nexusban.command.mute
     usage: /mute <player> <reason>
+  ban:
+    description: 'A command to ban a player permanently'
+    permission: nexusban.command.ban
+    usage: /ban <player> <reason>
 permissions:
   # root parent level permissions
   nexusban.*:
